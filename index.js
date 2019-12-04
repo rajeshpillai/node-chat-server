@@ -47,7 +47,7 @@ io.sockets.on("connection", function (socket) {
     // New users
     socket.on("new user", function (data, callback) {
         socket.username = data;
-        users.push(socket.username);
+        users.push(data);
         updateUsers();
 
         callback(true);
