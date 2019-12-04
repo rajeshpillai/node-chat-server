@@ -59,15 +59,15 @@ io.sockets.on("connection", function (socket) {
         socket.disconnect();
     });
 
-    socket.on("start chat", function (username) {
-        console.log(`Initating chat with ${username}`);
+    socket.on("start chat", function (chat) {
+        console.log(`Initating chat with ${chat.from}->${chat.to}`);
         let userSocket = connections.find((c) => {
-            return c.username == username;
+            return c.username == chat.to;
         });
 
         if (userSocket == null) return;
 
-        userSocket.emit('user joined', username);
+        userSocket.emit('user joined', chat.from);
 
         //io.sockets.emit('user joined', username);
 
