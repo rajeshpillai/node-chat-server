@@ -53,15 +53,40 @@ io.sockets.on("connection", function (socket) {
         callback(true);
     });
 
-    socket.on("send message", function (data) {
-        console.log(socket.username, data);
-        io.sockets.emit("new message", { msg: data, user: socket.username });
-    });
 
     socket.on("logout", function (username) {
         console.log(`Signing out ${username}`);
         socket.disconnect();
-    })
+    });
+
+    socket.on("start chat", function (username) {
+        console.log(`Initating chat with ${username}`);
+        let userSocket = connections.find((c) => {
+            return c.username == username;
+        });
+
+        if (userSocket == null) return;
+
+        userSocket.emit('user joined', username);
+
+        //io.sockets.emit('user joined', username);
+
+    });
+
+    socket.on("send_message", function (message) {
+        console.log(`Message from  ${message.from} to ${message.to}}`);
+        let userSocket = connections.find((c) => {
+            console.log(c.name, message.to);
+            return c.username == message.to;
+        });
+
+        if (userSocket == null) return;
+
+        console.log("found: ", userSocket.username);
+
+        userSocket.emit("on-message-received", message);
+
+    });
 
 
     function updateUsers() {
