@@ -46,7 +46,6 @@ io.sockets.on("connection", function (socket) {
 
     // New users
     socket.on("new user", function (data, callback) {
-
         socket.username = data;
         users.push(socket.username);
         updateUsers();
@@ -57,6 +56,11 @@ io.sockets.on("connection", function (socket) {
     socket.on("send message", function (data) {
         console.log(socket.username, data);
         io.sockets.emit("new message", { msg: data, user: socket.username });
+    });
+
+    socket.on("logout", function (username) {
+        console.log(`Signing out ${username}`);
+        socket.disconnect();
     })
 
 
