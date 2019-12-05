@@ -45,7 +45,7 @@ io.sockets.on("connection", function (socket) {
     });
 
     // New users
-    socket.on("new user", function (data, callback) {
+    socket.on("on_new_user_joined", function (data, callback) {
         socket.username = data;
         users.push(data);
         updateUsers();
@@ -59,7 +59,7 @@ io.sockets.on("connection", function (socket) {
         socket.disconnect();
     });
 
-    socket.on("start chat", function (chat) {
+    socket.on("chat_window_open", function (chat) {
         console.log(`Initating chat with ${chat.from}->${chat.to}`);
         let userSocket = connections.find((c) => {
             return c.username == chat.to;
@@ -67,7 +67,7 @@ io.sockets.on("connection", function (socket) {
 
         if (userSocket == null) return;
 
-        userSocket.emit('user joined', chat.from);
+        userSocket.emit('user_has_joined', chat.from);
 
         //io.sockets.emit('user joined', username);
 
@@ -84,13 +84,13 @@ io.sockets.on("connection", function (socket) {
 
         console.log("found: ", userSocket.username);
 
-        userSocket.emit("on-message-received", message);
+        userSocket.emit("on_message_received", message);
 
     });
 
 
     function updateUsers() {
-        io.sockets.emit("get users", users);
+        io.sockets.emit("on_get_users", users);
     }
 
 });
